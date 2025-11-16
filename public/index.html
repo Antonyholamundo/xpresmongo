@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>XPRES </title>
+  <style>body{font-family:Arial,Helvetica,sans-serif;padding:20px;max-width:700px;margin:auto}textarea{width:100%;height:120px}button{margin:6px}pre{background:#f6f6f6;padding:10px;border-radius:4px}</style>
+</head>
+<body>
+  <h1>XPRES </h1>
+
+  <h3>GET JSON interno</h3>
+  <button id="btn-internal">GET /internal</button>
+
+  <h3>Enviar JSON (POST)</h3>
+  <p>Escribe JSON en el área y pulsa enviar.</p>
+  <textarea id="payload">{ "alumno": "tu_nombre", "actividad": "prueba" }</textarea>
+  <div>
+    <button id="btn-send">POST /receive</button>
+  </div>
+
+  <h3>Respuesta</h3>
+  <pre id="output">(aquí aparece la respuesta)</pre>
+
+  <script>
+    const out = txt => document.getElementById('output').textContent = typeof txt === 'string' ? txt : JSON.stringify(txt, null, 2);
+
+    document.getElementById('btn-internal').addEventListener('click', async () => {
+      try {
+        const r = await fetch('/internal');
+        out(await r.json());
+      } catch (e) { out({ error: e.message }); }
+    });
+
+    document.getElementById('btn-send').addEventListener('click', async () => {
+      const txt = document.getElementById('payload').value;
+      try {
+        const json = JSON.parse(txt);
+        const r = await fetch('/receive', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(json) });
+        out(await r.json());
+      } catch (e) {
+        out({ error: 'JSON inválido o error en la petición', details: e.message });
+      }
+    });
+  </script>
+</body>
+</html>

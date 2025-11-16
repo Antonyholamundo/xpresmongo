@@ -1,0 +1,8 @@
+{
+  "app": "XPRES",
+  "version": "1.0.0",
+  "items": [
+    { "id": 1, "name": "uno" },
+    { "id": 2, "name": "dos" }
+  ]
+}
